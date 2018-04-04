@@ -10,19 +10,33 @@ class UserController extends Controller
 {
     //
 
+    public function test(Request $req){
+      return response()->json(['msg' => 'I think I work.'], 200);
+    }
+
     public function login(Request $req){
 
+      /*try{
       $req->validate([
         'email' => 'required',
         'password' => 'required'
       ]);
+    }catch(Exception $e){
+      return response()->json($e, 500);
+    }*/
 
       $email = $req->input('email');
       $password = $req->input('password');
 
-      $search = User::where('email', $email)->where('password', $password)->first();
+      $search = User::where('email', "=", $email)->first();
 
       if(count($search) > 0){
+        $search = $search->makeVisible('password');
+      }else{
+        return response()->json(['msg' => 'Your account details were wrong.'], 404);
+      }
+
+      if($search->password == $password){
         try{
          $token = JWTAuth::fromUser($search);
        }catch(Exception $e){
@@ -31,6 +45,7 @@ class UserController extends Controller
 
        return response()->json(['msg' => 'You were logged in.', 'token' => $token], 200);
       }
+      return response()->json(['msg' => 'we died'], 500);
 
     }
 

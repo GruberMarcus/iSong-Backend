@@ -21,7 +21,7 @@ class SongController extends Controller
       if(!$dbuser = User::find($user->pk_User)){
         return response()->json(['err' => 'User does not exist....'], 404);
       }
-      $content = Song::with('User.id')->all();
+      $content = Song::with('User:id, email')->all();
 
       return response()->json(['msg' => 'Here are your songs.'], 200);
 
