@@ -24,3 +24,5 @@ Route::post('/login', [
 Route::post('/signup', [
     'uses' => 'UserController@signup'
 ]);
+
+Route::resource('songs', 'SongController');
